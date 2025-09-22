@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life-Line Air Drone Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="header-title">Life-Line Air Drone Demo</h1>
+                <div class="header-status">
+                    <div class="status-indicator" id="connectionStatus">
+                        <span class="status-dot status-dot--success"></span>
+                        <span>All Systems Operational</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Dashboard Overview -->
+            <section id="dashboard" class="view view--active">
+                <div class="dashboard-grid">
+                    <!-- Mission Status Card -->
+                    <div class="card dashboard-card">
+                        <div class="card__header">
+                            <h2>Mission Status</h2>
+                            <div class="status status--info" id="missionStatus">READY</div>
+                        </div>
+                        <div class="card__body">
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <span class="stat-label">Battery Level</span>
+                                    <span class="stat-value" id="batteryLevel">100%</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Payload Temp</span>
+                                    <span class="stat-value" id="payloadTemp">4°C</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Signal Strength</span>
+                                    <span class="stat-value" id="signalStrength">98%</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Flight Time</span>
+                                    <span class="stat-value" id="flightTime">00:00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Environment Selection Card -->
+                    <div class="card dashboard-card">
+                        <div class="card__header">
+                            <h2>Environment Selection</h2>
+                        </div>
+                        <div class="card__body">
+                            <div class="form-group">
+                                <label class="form-label" for="environmentSelect">Select Scenario</label>
+                                <select id="environmentSelect" class="form-control">
+                                    <option value="forest">Forest Canopy Scenario</option>
+                                    <option value="desert">Desert Plain Scenario</option>
+                                    <option value="urban">Urban Scenario</option>
+                                </select>
+                            </div>
+                            <div class="environment-details" id="environmentDetails">
+                                <p class="environment-description">Dense vegetation, GPS-denied navigation challenges</p>
+                                <div class="environment-tags">
+                                    <span class="tag">GPS signal degradation</span>
+                                    <span class="tag">Dense canopy navigation</span>
+                                    <span class="tag">Limited landing zones</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Status Card -->
+                    <div class="card dashboard-card">
+                        <div class="card__header">
+                            <h2>System Status</h2>
+                        </div>
+                        <div class="card__body">
+                            <div class="system-status-list" id="systemStatusList">
+                                <!-- System status items will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mission Control Card -->
+                    <div class="card dashboard-card mission-control-card">
+                        <div class="card__header">
+                            <h2>Mission Control</h2>
+                        </div>
+                        <div class="card__body">
+                            <div class="mission-controls">
+                                <button id="startMissionBtn" class="btn btn--primary btn--lg">START MISSION</button>
+                                <button id="pauseMissionBtn" class="btn btn--secondary btn--lg" disabled>PAUSE</button>
+                                <button id="abortMissionBtn" class="btn btn--outline btn--lg" disabled>EMERGENCY ABORT</button>
+                            </div>
+                            <div class="mission-actions">
+                                <button id="viewTelemetryBtn" class="btn btn--outline">View Telemetry</button>
+                                <button id="planMissionBtn" class="btn btn--outline">Plan Mission</button>
+                                <button id="resetDemoBtn" class="btn btn--secondary">Reset Demo</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mission Control Interface -->
+            <section id="missionControl" class="view">
+                <div class="mission-grid">
+                    <!-- Live Map -->
+                    <div class="card map-card">
+                        <div class="card__header">
+                            <h2>Live Mission Map</h2>
+                            <div class="map-controls">
+                                <button id="centerMapBtn" class="btn btn--sm btn--outline">Center View</button>
+                                <button id="followDroneBtn" class="btn btn--sm btn--secondary">Follow Drone</button>
+                            </div>
+                        </div>
+                        <div class="card__body">
+                            <div class="map-container" id="missionMap">
+                                <div class="map-placeholder">
+                                    <div class="drone-icon" id="droneIcon">🚁</div>
+                                    <div class="waypoint-list" id="waypointMarkers">
+                                        <!-- Waypoints will be added dynamically -->
+                                    </div>
+                                    <div class="flight-path" id="flightPath"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Telemetry Panel -->
+                    <div class="card telemetry-card">
+                        <div class="card__header">
+                            <h2>Real-Time Telemetry</h2>
+                        </div>
+                        <div class="card__body">
+                            <div class="telemetry-grid" id="telemetryGrid">
+                                <!-- Telemetry items will be populated by JavaScript -->
+                            </div>
+                            <div class="mission-progress">
+                                <h3>Mission Progress</h3>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="missionProgress"></div>
+                                </div>
+                                <div class="waypoint-status" id="waypointStatus">
+                                    <span>Waypoint 1 of 5</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mission Timeline -->
+                <div class="card timeline-card">
+                    <div class="card__header">
+                        <h2>Mission Timeline</h2>
+                    </div>
+                    <div class="card__body">
+                        <div class="timeline" id="missionTimeline">
+                            <!-- Timeline items will be added dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Telemetry Dashboard -->
+            <section id="telemetryDashboard" class="view">
+                <div class="telemetry-dashboard-grid">
+                    <div class="card chart-card">
+                        <div class="card__header">
+                            <h2>Altitude Profile</h2>
+                        </div>
+                        <div class="card__body">
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="altitudeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card chart-card">
+                        <div class="card__header">
+                            <h2>Battery Level</h2>
+                        </div>
+                        <div class="card__body">
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="batteryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card chart-card">
+                        <div class="card__header">
+                            <h2>Ground Speed</h2>
+                        </div>
+                        <div class="card__body">
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="speedChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card chart-card">
+                        <div class="card__header">
+                            <h2>Payload Temperature</h2>
+                        </div>
+                        <div class="card__body">
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="temperatureChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mission Planning -->
+            <section id="missionPlanning" class="view">
+                <div class="planning-grid">
+                    <div class="card payload-card">
+                        <div class="card__header">
+                            <h2>Payload Configuration</h2>
+                        </div>
+                        <div class="card__body">
+                            <div class="form-group">
+                                <label class="form-label" for="payloadSelect">Select Medical Payload</label>
+                                <select id="payloadSelect" class="form-control">
+                                    <option value="aed">Emergency AED Kit (3.2 kg)</option>
+                                    <option value="blood">Blood Transport Kit (2.8 kg)</option>
+                                    <option value="medication">Medication Delivery (1.5 kg)</option>
+                                </select>
+                            </div>
+                            <div class="payload-details" id="payloadDetails">
+                                <!-- Payload details will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mission-params-card">
+                        <div class="card__header">
+                            <h2>Mission Parameters</h2>
+                        </div>
+                        <div class="card__body">
+                            <div class="form-group">
+                                <label class="form-label" for="cruiseAltitude">Cruise Altitude (m)</label>
+                                <input type="number" id="cruiseAltitude" class="form-control" value="100" min="50" max="200">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cruiseSpeed">Cruise Speed (m/s)</label>
+                                <input type="number" id="cruiseSpeed" class="form-control" value="15" min="5" max="25">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="deliveryMethod">Delivery Method</label>
+                                <select id="deliveryMethod" class="form-control">
+                                    <option value="land">Precision Landing</option>
+                                    <option value="drop">Air Drop</option>
+                                    <option value="winch">Winch Delivery</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Event Log -->
+            <section id="eventLog" class="view">
+                <div class="card log-card">
+                    <div class="card__header">
+                        <h2>Mission Event Log</h2>
+                        <div class="log-controls">
+                            <button id="clearLogBtn" class="btn btn--sm btn--outline">Clear Log</button>
+                            <button id="exportLogBtn" class="btn btn--sm btn--secondary">Export Log</button>
+                        </div>
+                    </div>
+                    <div class="card__body">
+                        <div class="log-container" id="logContainer">
+                            <!-- Log entries will be added dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="nav-buttons">
+            <button class="nav-btn nav-btn--active" data-view="dashboard">
+                <span class="nav-icon">🏠</span>
+                Dashboard
+            </button>
+            <button class="nav-btn" data-view="missionControl">
+                <span class="nav-icon">🎯</span>
+                Mission Control
+            </button>
+            <button class="nav-btn" data-view="telemetryDashboard">
+                <span class="nav-icon">📊</span>
+                Telemetry
+            </button>
+            <button class="nav-btn" data-view="missionPlanning">
+                <span class="nav-icon">📋</span>
+                Planning
+            </button>
+            <button class="nav-btn" data-view="eventLog">
+                <span class="nav-icon">📝</span>
+                Event Log
+            </button>
+        </div>
+    </nav>
+
+    <script src="app.js"></script>
+</body>
+</html>
