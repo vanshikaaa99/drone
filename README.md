@@ -7,10 +7,6 @@ The Life Saving Drone is designed to provide rapid emergency assistance by deliv
 - 🛰️ GPS-based autonomous navigation  
 - ⏱️ Quick response in emergencies  
 
-## Tech Stack
-- Hardware: Drone kit, GPS, camera, sensors  
-- Software: Python / Node.js, React.js (dashboard)  
-
 ## Use Cases
 - Road accidents → immediate aid delivery  
 - Natural disasters → area monitoring & supplies  
